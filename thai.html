@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="th">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>泰语辅音字母展示</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>泰语辅音字母</h1>
+        <p>以下是泰语的44个辅音字母，附有名称和发音（罗马化）。</p>
+
+        <table id="consonant-table">
+            <thead>
+                <tr>
+                    <th>字母</th>
+                    <th>名称</th>
+                    <th>发音（罗马化）</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 数据将通过JavaScript动态填充 -->
+            </tbody>
+        </table>
+
+        <script>
+            // 加载JSON数据
+            // python3 -m http.server
+            fetch("thai_consonants.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    const tableBody = document.querySelector(
+                        "#consonant-table tbody",
+                    );
+                    data.thai_consonants.forEach((consonant) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                    <td>${consonant.letter}</td>
+                    <td>${consonant.name}</td>
+                    <td>${consonant.pronunciation}</td>
+                `;
+                        row.addEventListener("click", function () {
+                            console.log("单元格被点击");
+                            speak(consonant.name);
+                        });
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch((error) => console.error("加载JSON数据失败:", error));
+            function speak(msg) {
+                const text = msg.trim();
+                if (text) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = "th-TH"; // 设置泰语
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    alert("请输入要朗读的泰语文本。");
+                }
+            }
+        </script>
+    </body>
+</html>
