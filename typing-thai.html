@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="thai">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // 段落中的文本只显示一行，当输入框按下回车后，段落文本显示下一行文本，并清空输入框
+        document.addEventListener('DOMContentLoaded', () => {
+            const img = document.querySelector('img');
+            const originalSrc = './img/thaikeyboardwithoutshift.png';
+            const shiftSrc = './img/thaikeyboardwithshift.png';
+            const paragraph = document.querySelector('p');
+            const paragraphText = paragraph.innerText.trim();
+            const input = document.querySelector('input');
+
+            // 将段落文本分割为多行
+            const paragraphLines = paragraph.innerText.trim().split(' ');
+            let currentLineIndex = 0;
+
+            // 初始化显示第一行
+            const updateParagraph = () => {
+                paragraph.innerText = paragraphLines[currentLineIndex] || '';
+            };
+            updateParagraph();
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Shift') {
+                    img.src = shiftSrc;
+                }
+            });
+
+            document.addEventListener('keyup', (event) => {
+                if (event.key === 'Shift') {
+                    img.src = originalSrc;
+                }
+            });
+
+            // 
+            input.addEventListener('input', () => {
+                const inputValue = input.value;
+                let highlightedText = '';
+                let paragraphText = paragraph.innerText;
+
+                for (let i = 0; i < paragraphText.length; i++) {
+                    if (i < inputValue.length && inputValue[i] === paragraphText[i]) {
+                        highlightedText += `<span style="color: green;">${paragraphText[i]}</span>`;
+                    } else {
+                        highlightedText += paragraphText[i];
+                    }
+                }
+
+                paragraph.innerHTML = highlightedText;
+            });
+
+            // 监听输入框按下回车事件
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    currentLineIndex++;
+                    updateParagraph();
+                    input.value = ''; // 清空输入框
+                }
+            });
+            
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Thai Typing Exercise</h1>
+    <p style="font-size: xx-large;">ลิ้นกับฟันพบกันทีไรก็เรื่องใหญ่ น้ำกับไฟถ้าไกลกันได้ก็ดี</p>
+    <input type="text" placeholder="Type here..." style="width: 100%; padding: 10px; font-size: xx-large;">
+    <img src="./img/thaikeyboardwithoutshift.png" alt="Keyboard" style="width: 60%; height: auto;">
+</body>
+
+</html>
